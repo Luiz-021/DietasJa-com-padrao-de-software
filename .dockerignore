@@ -1,0 +1,13 @@
+# Node
+FrontEnd/DietasJaApp/node_modules
+
+# Python / Django
+BackEnd/__pycache__/
+BackEnd/*.pyc
+BackEnd/staticfiles/
+
+# Expo / caches
+FrontEnd/DietasJaApp/.expo
+
+# Arquivos de ambiente
+.env
