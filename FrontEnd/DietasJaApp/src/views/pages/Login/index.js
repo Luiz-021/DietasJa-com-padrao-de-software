@@ -30,6 +30,7 @@ export default function Login({ handleLogin }) {
           onChangeText={setEmail}
           value={email}
           placeholder="Digite seu nome de usuário"
+          placeholderTextColor={'#999'}
           keyboardType="ascii-capable"
         />
 
@@ -39,6 +40,7 @@ export default function Login({ handleLogin }) {
           onChangeText={setSenha}
           value={senha}
           placeholder="Digite sua senha"
+          placeholderTextColor={'#999'}
           keyboardType="numeric"
           secureTextEntry
         />
