@@ -3,7 +3,7 @@ import { Text, View, TextInput, TouchableOpacity, FlatList, Alert, ScrollView, S
 import styles from "./styles";
 import { useNavigation } from "@react-navigation/native";
 import axios from 'axios'
-import {API_BASE_URL} from '../../config.js'
+import {API_BASE_URL} from '../../../config.js'
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function CadastrarPrato() {
@@ -80,7 +80,7 @@ export default function CadastrarPrato() {
 
     async function enviarSolicitacaoGET() {
         const token_access = await AsyncStorage.getItem("jwt");
-        axios.get(`${API_BASE_URL}/alimentos/`,
+        axios.get(`${API_BASE_URL}/api/alimentos/`,
         {headers: {Authorization: token_access}},
         {validateStatus: () => true},
         )
@@ -106,7 +106,7 @@ export default function CadastrarPrato() {
     async function enviarSolicitacaoPOST() {
         var calorias = 4000 * (parseFloat(proteinas) + parseFloat(carboidratos)) + 9000*parseFloat(gorduras);
         const token_access = await AsyncStorage.getItem("jwt");
-        axios.post(`${API_BASE_URL}/alimentos/`,
+        axios.post(`${API_BASE_URL}/api/alimentos/`,
         { nome: nome,
           porcao: quantidade,
           qtd_calorias: calorias,
@@ -150,7 +150,7 @@ export default function CadastrarPrato() {
 
     async function enviarSolicitacaoDELETE(idAlimento) {
         const token_access = await AsyncStorage.getItem("jwt");
-        axios.delete(`${API_BASE_URL}/alimentos/${idAlimento}`,
+        axios.delete(`${API_BASE_URL}/api/alimentos/${idAlimento}`,
         {headers: {Authorization: token_access}},
         {validateStatus: () => true},
         )
@@ -266,6 +266,7 @@ export default function CadastrarPrato() {
                 (4*(parseFloat(proteinas) + parseFloat(carboidratos)) + 9*parseFloat(gorduras)) >= 0 ? ((4*(parseFloat(proteinas) + parseFloat(carboidratos)) + 9*parseFloat(gorduras))).toFixed(2) : ""
             }`
             }
+          placeholderTextColor={'#B0B0B0'}
         />
       </View>
       <View style={styles.listaContainer}>

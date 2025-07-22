@@ -4,7 +4,7 @@ import { Button, List, Title, DefaultTheme, Provider as PaperProvider } from 're
 import styles from './styles';
 
 import axios from 'axios';
-import { API_BASE_URL } from "../../config";
+import { API_BASE_URL } from "../../../config";
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -39,12 +39,23 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
           const token_access = await AsyncStorage.getItem("jwt");
           
           try {
-            const resposta = await axios.get(`${API_BASE_URL}/alimentos/`, {
+            const resposta = await axios.get(`${API_BASE_URL}/api/alimentos/`, {
               headers: {
                 Authorization: token_access,
               }  
             });
-            setAlimentos(resposta.data);
+
+            if (Array.isArray(resposta.data)) {
+                setAlimentos(resposta.data);
+            } else {
+                // Se a API retornar um objeto com a chave "results", comum em paginação
+                if (resposta.data && Array.isArray(resposta.data.results)) {
+                    setAlimentos(resposta.data.results);
+                } else {
+                    console.warn("A API não retornou um array de alimentos. Usando um array vazio.");
+                    setAlimentos([]); // Garante que 'alimentos' seja sempre um array
+                }
+            }
       
           } catch (error) {
             console.log('Erro na solicitação resposta:', error);
@@ -56,7 +67,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
         }
       // Função chamada ao pressionar o botão "Concluir Refeição"
       const enviarRefeicao = async () => {
-        if (alimentosSelecionados === []) {
+        if (alimentosSelecionados == []) {
           Alert.alert('Erro', 'Nenhum alimento foi selecionado.');
           return;
         }
@@ -66,7 +77,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
         try {
           const token_access = await AsyncStorage.getItem("jwt");
           try {
-            const resposta = await axios.post(`${API_BASE_URL}/refeicoes/`,{
+            const resposta = await axios.post(`${API_BASE_URL}/api/refeicoes/`,{
               nome: nomeRefeicao,
               porcao: totalQuantidade,
               calorias_total: totalCalorias,
@@ -88,7 +99,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
         try {
           const respostaPatch = await axios.patch(
-            `${API_BASE_URL}/meta-gamificada/`,
+            `${API_BASE_URL}/api/meta-gamificada/`,
             {
               qtd_carboidratos: totalCarboidratos,
               qtd_proteinas: totalProteinas,
@@ -215,6 +226,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
                   label="Digite para filtrar"
                   value={nomeRefeicao}
                   placeholder="Digite o nome da Refeição"
+                  placeholderTextColor={'#B0B0B0'}
                   onChangeText={setNomeRefeicao}
                 />
               </View>
@@ -226,6 +238,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
                 <TextInput
                   style={styles.inputBusca}
                   label="Digite para filtrar"
+                  placeholderTextColor={'#B0B0B0'}
                   value={filtroAlimentos}
                   placeholder="Pesquise e adicione um alimento"
                   onChangeText={setFiltroAlimentos}
@@ -298,10 +311,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
             )}
 
             <Button
-              mode="outlined"
               onPress={limparSelecao}
-              style={styles.button}
-              labelStyle={styles.buttonLabel}
+              style={styles.buttonClean}
+              labelStyle={styles.buttonLabelClean}
             >
               Limpar Consumo
             </Button>

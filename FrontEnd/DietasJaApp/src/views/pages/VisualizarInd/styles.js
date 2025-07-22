@@ -9,11 +9,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     paddingHorizontal: width * 0.01, 
     width: "100%",
+    gap: 10,
   },
   header: {
     backgroundColor: '#fff',
     paddingVertical: height * 0.026, 
-    paddingHorizontal: width * 0.2, 
+    paddingHorizontal: width * 0.1, 
     marginBottom: height * 0.01, 
     borderRadius: width * 0.08, 
     alignItems: "center",
@@ -25,7 +26,7 @@ const styles = StyleSheet.create({
   messagemtitulo: {
     fontSize: height * 0.025, 
     fontWeight: "bold",
-    marginBottom: height * 0.04, 
+    marginBottom: height * 0.02, 
     textAlign: "center",
   },
   messagembottom: {
@@ -52,7 +53,7 @@ const styles = StyleSheet.create({
   },
   messagemcontainer:{
     backgroundColor: "#F17163",
-    marginTop: height * 0.035,
+    padding: height * 0.01,
     borderRadius: width * 0.02,
   },
   infoItem: {

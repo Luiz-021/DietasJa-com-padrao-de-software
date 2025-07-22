@@ -14,7 +14,7 @@ export default function Welcome() {
 
        < View style ={styles.container}>
         <View style ={styles.containerlogo}>
-            <Animatable.Image source={require('../../assets/outralogo.png')}
+            <Animatable.Image source={require('../../../assets/outralogo.png')}
             animation="flipInY"
             style={{width:370, height:200}}
             rezideMode="contain"></Animatable.Image>

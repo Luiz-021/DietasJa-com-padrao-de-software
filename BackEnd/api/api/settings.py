@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 #SECRET_KEY = 'django-insecure-y!*pgq17ux#)%_i5e#y!4*r%u5o9zwpygdspy9z)k!&to+6avo'
-SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
+SECRET_KEY = 'django-insecure-!5j@h#z&_2k5g8*p#1n@y!b@t-s(w+@_v=q*y-l^0x@a+d'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 #DEBUG = True
@@ -89,22 +89,14 @@ WSGI_APPLICATION = 'api.wsgi.application'
 
 '''DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'dietas_ja',
-        'USER': 'test_user',
-        'PASSWORD': 'test_pwd',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'dietas_ja'
     }
 }'''
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ['POSTGRES_DB'],
-        'USER': os.environ['POSTGRES_USER'],
-        'PASSWORD': os.environ['POSTGRES_PASSWORD'],
-        'HOST': os.environ['POSTGRES_HOST'],
-        'PORT': os.environ['POSTGRES_PORT'],
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 

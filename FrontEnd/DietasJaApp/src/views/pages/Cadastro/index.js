@@ -6,7 +6,7 @@ import {} from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 
 import axios from 'axios';
-import { API_BASE_URL } from "../../config";
+import { API_BASE_URL } from "../../../config";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function TelaCadastro(){
@@ -39,27 +39,35 @@ export default function TelaCadastro(){
         
     }
 
-    async function cadastro(email,senha){
-        try {
-          const response = await axios.post(`${API_BASE_URL}/sign-in/`, {
+    // Substitua a sua função 'cadastro' por esta versão mais simples e direta
+async function cadastro(email, senha) {
+    try {
+        const response = await axios.post(`${API_BASE_URL}/api/sign-in/`, {
             username: email,
             password: senha
-          })
-          if (response.status == 201){
+        });
+
+        if (response.status == 201) {
             let userId = response.data.id;
-            await AsyncStorage.setItem('userId', `${userId}`)
-            
+            await AsyncStorage.setItem('userId', `${userId}`);
             navigation.navigate('PrimeiroAcesso');
-          } else{
-            console.log(response.data)
-          }
-        } catch (error) {
-          console.log(error)
-          if (error.response.status == 400){
-            Alert.alert("Erro", "Nome de usuário já cadastrado.")
-          }
+        }
+
+    } catch (error) {
+        if (error.response && error.response.data) {
+            // Converte a resposta de erro (seja qual for o formato) em uma string legível
+            const errorMessage = JSON.stringify(error.response.data, null, 2);
+            
+            // Mostra o alerta com a resposta de erro "crua" do backend
+            Alert.alert("Erro Recebido do Servidor", errorMessage);
+
+        } else {
+            // Caso seja um erro de rede ou outro problema sem resposta da API
+            console.log(error);
+            Alert.alert("Erro", "Não foi possível conectar ao servidor.");
         }
     }
+}
 
     return <>
     <View style = {styles.CaixaTotalmente}>
@@ -71,7 +79,8 @@ export default function TelaCadastro(){
 
             <Text style = {styles.Title}>Nome de Usuário </Text>
             <TextInput style={styles.Input}
-             placeholder="Digite seu nome de usuário" 
+             placeholder="Digite seu nome de usuário"
+             placeholderTextColor={'#B0B0B0'}
              keyboardType = "ascii-capable"
              value = {email}
              onChangeText={setEmail}>
@@ -80,6 +89,7 @@ export default function TelaCadastro(){
             <Text style = {styles.Title}>Senha </Text>
             <TextInput style={styles.Input}
              placeholder="Digite sua senha"
+             placeholderTextColor={'#B0B0B0'}
              keyboardType = "numeric"
              value = {senha}
              onChangeText={setSenha}
@@ -89,6 +99,11 @@ export default function TelaCadastro(){
             <TouchableOpacity style = {styles.botao}
             onPress={ValidationCadastro}
             ><Text style = {styles.textoBotao}>{textButton}</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style = {styles.botaoVoltar}
+            onPress={() => navigation.navigate('Login')}
+            ><Text style = {styles.textoBotaoVoltar}>Voltar</Text>
             </TouchableOpacity>
         </Animatable.View>
     </View>

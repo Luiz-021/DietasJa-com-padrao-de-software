@@ -1,14 +1,14 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import TabRoutes from "./tab.routes";
-import InformConsumo from "../pages/InformConsumo";
-import Login from "../pages/Login";
-import Welcome from "../pages/Welcome";
-import Perfil from "../pages/Perfil";
-import EditarMetas from "../pages/EditarMetas";
-import TelaInicial from "../pages/TelaInicial";
-import EditarPerfil from "../pages/EditarPerfil";
-import EditarLogin from "../pages/EditarLogin";
+import InformConsumo from "../views/pages/InformConsumo";
+import Login from "../views/pages/Login";
+import Welcome from "../views/pages/Welcome";
+import Perfil from "../views/pages/Perfil";
+import EditarMetas from "../views/pages/EditarMetas";
+import TelaInicial from "../views/pages/TelaInicial";
+import EditarPerfil from "../views/pages/EditarPerfil";
+import EditarLogin from "../views/pages/EditarLogin";
 
 const Stack = createNativeStackNavigator();
 

@@ -2,10 +2,10 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { SimpleLineIcons } from '@expo/vector-icons'; 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-import TelaInicial from "../pages/TelaInicial";
-import InformConsumo from "../pages/InformConsumo";
-import Historico from "../pages/HistoricoConsumo";
-import Visualizar from "../pages/VisualizarInd";
+import TelaInicial from "../views/pages/TelaInicial";
+import InformConsumo from "../views/pages/InformConsumo";
+import Historico from "../views/pages/HistoricoConsumo";
+import Visualizar from "../views/pages/VisualizarInd";
 
 const Tab = createBottomTabNavigator();
 

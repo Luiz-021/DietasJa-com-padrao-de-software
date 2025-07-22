@@ -4,7 +4,7 @@ import styles from "./style";
 import { useNavigation } from '@react-navigation/native';
 
 import axios from 'axios';
-import { API_BASE_URL } from "../../config";
+import { API_BASE_URL } from "../../../config";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function EditarLogin(){
@@ -42,7 +42,7 @@ async function PatchInfos(email,senha){
     try {
         const token = await AsyncStorage.getItem('jwt')
 
-        const response = await axios.patch(`${API_BASE_URL}/update-user/`,
+        const response = await axios.patch(`${API_BASE_URL}/api/update-user/`,
         {
             username: email,
             password: senha
@@ -67,7 +67,7 @@ async function PatchInfos(email,senha){
         <SafeAreaView style = {styles.CaixaTotal}>
 
             <View style = {styles.CaixaTitulo}>
-            <Image source = {require("../../assets/outralogo.png")}
+            <Image source = {require("../../../assets/outralogo.png")}
                    style = {styles.imagemEstilo}></Image>
             <Text style = {styles.textoTitulo}>DietasJá</Text>
             </View>

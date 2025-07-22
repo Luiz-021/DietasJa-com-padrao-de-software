@@ -7,9 +7,9 @@ import { View, TouchableOpacity, Text, StyleSheet, Image, Dimensions, SafeAreaVi
 
 import TabRoutes from "./tab.routes";
 import StackRoutes from "./stack.routes";
-import EditarMetas from "../pages/EditarMetas";
-import PerfilScreen from "../pages/Perfil";
-import CadastrarPrato from "../pages/CadastrarPrato";
+import EditarMetas from "../views/pages/EditarMetas";
+import PerfilScreen from "../views/pages/Perfil";
+import CadastrarPrato from "../views/pages/CadastrarPrato";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Drawer = createDrawerNavigator();

@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Button, Modal, TouchableOpacity, Animated, Alert, ActivityIndicator } from 'react-native';
 import styles from "./styles";
 import * as Animatable from 'react-native-animatable';
-import Particulas from "../../components/ParticulasEfeito";
+import Particulas from "../../../components/ParticulasEfeito";
 import { useNavigation } from '@react-navigation/native';
-import { API_BASE_URL } from '../../config';
+import { API_BASE_URL } from '../../../config';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -60,7 +60,7 @@ export default function WeeklyCountScreen() {
 
 	async function enviarSolicitacaoGETMetaDiaria() {
 		const token_access = await AsyncStorage.getItem("jwt");
-		axios.get(`${API_BASE_URL}/meta/`,
+		axios.get(`${API_BASE_URL}/api/meta/`,
 		{
             headers: {Authorization : token_access}
 		}, {validateStatus: () => true},)
@@ -89,7 +89,7 @@ export default function WeeklyCountScreen() {
 
 	async function enviarSolicitacaoGETMetaGamificada() {
 		const token_access = await AsyncStorage.getItem("jwt");
-		axios.get(`${API_BASE_URL}/meta-gamificada/semana`,
+		axios.get(`${API_BASE_URL}/api/meta-gamificada/semana`,
 		{
             headers: {Authorization: token_access}
 		}, {validateStatus: () => true},)

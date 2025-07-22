@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import Login from "../Login"
 
 import axios from 'axios';
-import { API_BASE_URL } from "../../config";
+import { API_BASE_URL } from "../../../config";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function EditarPerfil({handleLogOut}){
@@ -63,7 +63,7 @@ const items = [
             var genero = "F"
         }
 
-        const response = await axios.patch(`${API_BASE_URL}/user-metrics/`,
+        const response = await axios.patch(`${API_BASE_URL}/api/user-metrics/`,
         {
             nome: nome,
             genero: genero,
@@ -108,7 +108,7 @@ const handleVoltar = () => {
         <SafeAreaView style = {styles.CaixaTotal}>
             
             <View style = {styles.CaixaTitulo}>
-            <Image source = {require("../../assets/outralogo.png")}
+            <Image source = {require("../../../assets/outralogo.png")}
                    style = {styles.imagemEstilo}></Image>
             <Text style = {styles.textoTitulo}>DietasJá! </Text>
             </View>

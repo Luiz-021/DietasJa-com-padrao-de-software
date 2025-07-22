@@ -53,6 +53,15 @@ const styles = StyleSheet.create({
   buttonLabel: {
     color: '#FFFFFF',
   },
+  buttonClean: {
+    marginBottom: 16,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#38a69d',
+  },
+  buttonLabelClean: {
+    color: '#38a69d',
+  },
   listSection: {
     marginBottom: 16,
   },

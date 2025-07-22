@@ -3,7 +3,7 @@ import {Text, View, TextInput, TouchableOpacity, Alert, ActivityIndicator} from 
 import styles from "./styles"
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
-import {API_BASE_URL} from '../../config.js';
+import {API_BASE_URL} from '../../../config.js';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function EditarMetas(){
@@ -35,7 +35,7 @@ export default function EditarMetas(){
 
     async function enviarSolicitacaoGET() {
         const token_access = await AsyncStorage.getItem("jwt");
-        axios.get(`${API_BASE_URL}/meta/`, {headers: {Authorization: token_access}})
+        axios.get(`${API_BASE_URL}/api/meta/`, {headers: {Authorization: token_access}})
         .then((resposta) => {
             const qtdCalorias = parseFloat(resposta.data[0]['qtd_calorias'])/1000; // Meta recebida pelo método GET (em cal), converte para kcal
             setMeta(qtdCalorias); // Caixa de meta atual recebe o valor recebido da requisição GET
@@ -57,7 +57,7 @@ export default function EditarMetas(){
 
     async function enviarSolicitacaoPOST(meta){
         const token_access = await AsyncStorage.getItem("jwt");
-        axios.post(`${API_BASE_URL}/meta/`, {qtd_calorias: meta}, {headers: {Authorization: token_access,}})
+        axios.post(`${API_BASE_URL}/api/meta/`, {qtd_calorias: meta}, {headers: {Authorization: token_access,}})
         .then((resposta) => {
             setMeta(meta/1000) // Atualiza a caixa da meta atual (divide por 100, pois front considera kcal e back considera cal)
             setNovaMeta('');       // Limpa caixa de meta antiga
@@ -73,7 +73,7 @@ export default function EditarMetas(){
     
     async function enviarSolicitacaoPATCH(novaMeta) {
         const token_access = await AsyncStorage.getItem("jwt");
-        axios.patch(`${API_BASE_URL}/meta/`, {qtd_calorias: novaMeta}, {headers: {Authorization: token_access,}})
+        axios.patch(`${API_BASE_URL}/api/meta/`, {qtd_calorias: novaMeta}, {headers: {Authorization: token_access,}})
         .then(() => {
             setMeta(novaMeta/1000) // Atualiza a caixa da meta atual (divide por 100, pois front considera kcal e back considera cal)
             setNovaMeta('');       // Limpa caixa de meta antiga

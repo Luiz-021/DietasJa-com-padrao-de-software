@@ -60,6 +60,21 @@ const styles = StyleSheet.create(
             color:"#FFFFFF",
             fontWeight:"bold",
         },
+        botaoVoltar:{
+            borderRadius:4,
+            alignItems: "center",
+            justifyContent: "center",
+            width: "100%",
+            backgroundColor:"#ffffff",
+            paddingVertical: 8,
+            marginTop: 25,
+            
+        },
+        textoBotaoVoltar:{
+            fontSize:18,
+            color:"#38a69d",
+            fontWeight:"bold",
+        },
     }
 )
 export default styles

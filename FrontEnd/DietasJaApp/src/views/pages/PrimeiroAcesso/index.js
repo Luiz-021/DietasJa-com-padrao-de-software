@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import styles from "./styles";
 
 import axios from 'axios';
-import { API_BASE_URL } from "../../config";
+import { API_BASE_URL } from "../../../config";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Login from "../Login"
 
@@ -63,7 +63,7 @@ async function cadastro(nome, valoratual, idade, altura, peso){
         var genero = 'F';
       }
 
-      const response = await axios.post(`${API_BASE_URL}/new-user-metrics/`, {
+      const response = await axios.post(`${API_BASE_URL}/api/new-user-metrics/`, {
         nome: nome,
         genero: genero,
         altura: altura/100,
@@ -90,7 +90,7 @@ async function cadastro(nome, valoratual, idade, altura, peso){
         <SafeAreaView style = {styles.CaixaTotal}>
 
             <View style = {styles.CaixaTitulo}>
-            <Image source = {require("../../assets/outralogo.png")}
+            <Image source = {require("../../../assets/outralogo.png")}
                    style = {styles.imagemEstilo}></Image>
             <Text style = {styles.textoTitulo}>DietasJá</Text>
             </View>

@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import DrawerRoutes from "./drawer.routes";
-import Login from "../pages/Login";
-import Welcome from "../pages/Welcome";
+import Login from "../views/pages/Login";
+import Welcome from "../views/pages/Welcome";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import PrimeiroAcesso from "../pages/PrimeiroAcesso";
-import EditarLogin from "../pages/EditarLogin"
-import EditarPerfil from "../pages/EditarPerfil"
+import PrimeiroAcesso from "../views/pages/PrimeiroAcesso";
+import EditarLogin from "../views/pages/EditarLogin"
+import EditarPerfil from "../views/pages/EditarPerfil"
 import StackRoutes from "./stack.routes";
-import Cadastro from "../pages/Cadastro";
+import Cadastro from "../views/pages/Cadastro";
 
 const Stack = createNativeStackNavigator();
 

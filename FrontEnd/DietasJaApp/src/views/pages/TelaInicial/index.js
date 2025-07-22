@@ -3,7 +3,7 @@ import { View, Text, ActivityIndicator, Alert} from 'react-native';
 import styles from "./styles"
 import * as Animatable from 'react-native-animatable';
 import axios from 'axios';
-import { API_BASE_URL } from "../../config";
+import { API_BASE_URL } from "../../../config";
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -29,7 +29,7 @@ export default function TelaInicial() {
         const token_access = await AsyncStorage.getItem("jwt");
         
         try {
-          const respostanome = await axios.get(`${API_BASE_URL}/user-metrics/`, {
+          const respostanome = await axios.get(`${API_BASE_URL}/api/user-metrics/`, {
             headers: {
               Authorization: token_access,
             }  
@@ -43,7 +43,7 @@ export default function TelaInicial() {
         } 
     
         try {
-          const respostameta = await axios.get(`${API_BASE_URL}/meta/`, {
+          const respostameta = await axios.get(`${API_BASE_URL}/api/meta/`, {
             headers: {
               Authorization: token_access,
             }
@@ -66,7 +66,7 @@ export default function TelaInicial() {
         }
     
         try {
-          const respostaconsumo = await axios.get(`${API_BASE_URL}/meta-gamificada/dia`, {
+          const respostaconsumo = await axios.get(`${API_BASE_URL}/api/meta-gamificada/dia`, {
             headers: {
               Authorization: token_access,
             }

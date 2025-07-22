@@ -8,7 +8,7 @@ import EditarLogin from "../EditarLogin";
 import Login from "../Login"
 
 import axios from 'axios';
-import { API_BASE_URL } from "../../config";
+import { API_BASE_URL } from "../../../config";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Perfil(){
@@ -30,7 +30,7 @@ export default function Perfil(){
       async function getUserInfo(){
         try {
           const token = await AsyncStorage.getItem('jwt')
-          const response = await axios.get(`${API_BASE_URL}/user-metrics/`, {
+          const response = await axios.get(`${API_BASE_URL}/api/user-metrics/`, {
             headers: {
               Authorization: token,
             },

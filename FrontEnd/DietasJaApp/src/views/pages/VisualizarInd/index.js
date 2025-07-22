@@ -3,7 +3,7 @@ import { View, Text, ActivityIndicator} from "react-native";
 import { AntDesign } from '@expo/vector-icons';
 import styles from "./styles";
 import axios from 'axios';
-import { API_BASE_URL } from "../../config";
+import { API_BASE_URL } from "../../../config";
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -92,7 +92,7 @@ const VisualisarIndices = () => {
           const token_access = await AsyncStorage.getItem("jwt");
 
           try {
-            const respostaimc = await axios.get(`${API_BASE_URL}/user-metrics/`, {
+            const respostaimc = await axios.get(`${API_BASE_URL}/api/user-metrics/`, {
               headers: {
                 Authorization: token_access,
               }  
@@ -106,7 +106,7 @@ const VisualisarIndices = () => {
             // Lógica de tratamento de erro
           }
           try {
-            const respostatmb = await axios.get(`${API_BASE_URL}/user-metrics/`, {
+            const respostatmb = await axios.get(`${API_BASE_URL}/api/user-metrics/`, {
               headers: {
                 Authorization: token_access,
               }  
@@ -153,7 +153,7 @@ const VisualisarIndices = () => {
           <Text style={styles.messagem}><AntDesign name={imcIcon} size={24} /> {imcMessage}</Text>
   
         </View>
-        <View style={[styles.infoContainer]}>
+      <View style={[styles.infoContainer]}>
         <Text style={styles.messagemdesc}>Taxa de Metabolismo Basal</Text>
         <View style={[styles.infoItem, tmbStyle]}>
           <Text style={styles.infoLabel}>TMB</Text>
@@ -162,7 +162,7 @@ const VisualisarIndices = () => {
           <Text style={styles.messagem}><AntDesign name={tmbIcon} size={24} /> {tmbMessage}</Text>
       </View>
       <View style = {styles.messagemcontainer}>
-      <Text style={styles.messagembottom}><AntDesign name={"exclamationcircle"} size={21} /> Mantenha seus dados atualizados para obter resultados atuais!</Text>
+        <Text style={styles.messagembottom}><AntDesign name={"exclamationcircle"} size={21} /> Mantenha seus dados atualizados para obter resultados atuais!</Text>
       </View>
     </View>
     
