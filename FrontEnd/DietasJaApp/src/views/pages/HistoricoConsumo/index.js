@@ -19,7 +19,7 @@ export default function WeeklyCountScreen() {
 	var metaDiaria = 0;
 	var diasDentroMeta = 0;
 
-	useEffect(()=>{ // Executa sempre que tela recebe o foco
+	useEffect(()=>{
 		console.log("Abriu tela de histórico de metas");
 		enviarSolicitacaoGETMetaDiaria();
 		navigation.addListener('focus', ()=>setLoad(!load));

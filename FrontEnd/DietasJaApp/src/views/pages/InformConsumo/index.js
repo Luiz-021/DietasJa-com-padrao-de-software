@@ -1,344 +1,130 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TextInput, Alert, KeyboardAvoidingView, Platform} from 'react-native';
+// src/views/pages/InformarConsumo/index.js
+import React from 'react';
+import { View, Text, FlatList, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
 import { Button, List, Title, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import styles from './styles';
+import { useInformarConsumoViewModel } from '../../../viewModels/InformarConsumoViewModel';
 
-import axios from 'axios';
-import { API_BASE_URL } from "../../../config";
-import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
-    const InformarConsumoScreen = () => {
-      const [alimentos, setAlimentos] = useState([]);
-
-      const [load, setLoad] = useState(true);
-      const navigation = useNavigation();
-
-      useEffect(() => { // useEffect: executa após a renderização dos componentes
-        enviarSolicitacaoGET();
-        navigation.addListener('focus', ()=>setLoad(!load));
-      }, [load, navigation])
-      
-      const [filtroAlimentos, setFiltroAlimentos] = useState('');
-      const [alimentosSelecionados, setAlimentosSelecionados] = useState([]);
-      const [alimentoSelecionado, setAlimentoSelecionado] = useState(null);
-      const [quantidadeAlimentoSelecionado, setQuantidadeAlimentoSelecionado] = useState(0);
-      const [isKeyboardActive, setIsKeyboardActive] = useState(false);
-      const [nomeRefeicao, setNomeRefeicao] = useState('');
-      const [total, setTotal] = useState(0);
-      const [mostrarCampoRefeicao, setMostrarCampoRefeicao] = useState(true);
-      const [totalCarboidratos, setTotalCarboidratos] = useState(0);
-      const [totalProteinas, setTotalProteinas] = useState(0);
-      const [totalGorduras, setTotalGorduras] = useState(0);
-      const [totalQuantidade, setTotalQuantidade] = useState(0);
-      const [totalCalorias, setTotalCalorias] = useState(0);
-
-      // Função para buscar os alimentos no banco
-      async function enviarSolicitacaoGET() {
-        try {
-          const token_access = await AsyncStorage.getItem("jwt");
-          
-          try {
-            const resposta = await axios.get(`${API_BASE_URL}/api/alimentos/`, {
-              headers: {
-                Authorization: token_access,
-              }  
-            });
-
-            if (Array.isArray(resposta.data)) {
-                setAlimentos(resposta.data);
-            } else {
-                // Se a API retornar um objeto com a chave "results", comum em paginação
-                if (resposta.data && Array.isArray(resposta.data.results)) {
-                    setAlimentos(resposta.data.results);
-                } else {
-                    console.warn("A API não retornou um array de alimentos. Usando um array vazio.");
-                    setAlimentos([]); // Garante que 'alimentos' seja sempre um array
-                }
-            }
-      
-          } catch (error) {
-            console.log('Erro na solicitação resposta:', error);
-            // Lógica de tratamento de erro
-          }
-        } catch (error) {
-            console.log('Erro ao executar GET:', error);
-          }
-        }
-      // Função chamada ao pressionar o botão "Concluir Refeição"
-      const enviarRefeicao = async () => {
-        if (alimentosSelecionados == []) {
-          Alert.alert('Erro', 'Nenhum alimento foi selecionado.');
-          return;
-        }
-        // Cria um array com os IDs dos alimentos selecionados
-        const alimentosIds = alimentosSelecionados.map((alimento) => alimento.id);
-        
-        try {
-          const token_access = await AsyncStorage.getItem("jwt");
-          try {
-            const resposta = await axios.post(`${API_BASE_URL}/api/refeicoes/`,{
-              nome: nomeRefeicao,
-              porcao: totalQuantidade,
-              calorias_total: totalCalorias,
-              carboidratos_total: totalCarboidratos,
-              e_padrao: false, // Defina o valor apropriado para o campo e_padrao
-              gorduras_total: totalGorduras,
-              proteinas_total: totalProteinas,
-              alimentos_list: alimentosIds,
-            },
-             {
-              headers: {
-                Authorization: token_access,
-              }  
-            });
-            } catch (error) {
-              console.log('Erro na solicitação Post de Refeição:', error);
-              limparSelecao();
-            }
-
-        try {
-          const respostaPatch = await axios.patch(
-            `${API_BASE_URL}/api/meta-gamificada/`,
-            {
-              qtd_carboidratos: totalCarboidratos,
-              qtd_proteinas: totalProteinas,
-              qtd_gorduras: totalGorduras,
-            },
-            {
-              headers: {
-                Authorization: token_access,
-              },
-            }
-          );
-          if (respostaPatch.status == 200){
-            limparSelecao();
-            Alert.alert('Sucesso', 'Refeição enviada com sucesso!');
-          }
-        } catch (error) {
-          console.log('Erro na solicitação PATCH:', error);
-          Alert.alert("Erro", "Insira novamente a refeição. Verifique se possui uma meta cadastrada.");
-          limparSelecao();
-        }
-      } catch (error) {
-        console.log('Erro ao executar tokien:', error);
-      }
-      };
-      
-
-      // Função para filtrar os alimentos com base no filtro de alimentos
-      const removerAcentos = (str) => {
-        return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-      };
-      
-      const filtrarAlimentos = () => {
-        if (filtroAlimentos === "") {
-          return [];
-        } else {
-          const filtroSemAcentos = removerAcentos(filtroAlimentos.toLowerCase());
-          return alimentos.filter((alimento) =>
-            removerAcentos(alimento.nome.toLowerCase()).includes(filtroSemAcentos)
-          );
-        }
-      };
-      
-
-      // Função chamada ao pressionar um alimento na lista
-      const toggleSelecaoAlimento = (id) => {
-        setAlimentos((prevAlimentos) => {
-          const alimentosAtualizados = prevAlimentos.map((alimento) =>
-            alimento.id === id ? { ...alimento, selecionado: !alimento.selecionado } : alimento
-          );
-      
-          const alimentoSelecionado = alimentosAtualizados.find((alimento) => alimento.id === id);
-          setAlimentoSelecionado(alimentoSelecionado);
-          
-          // Verifica se mostrarCampoRefeicao é verdadeiro e atualiza somente se for
-          if (mostrarCampoRefeicao) {
-            setNomeRefeicao(nomeRefeicao);
-            setMostrarCampoRefeicao(false);
-          }
-          
-          setAlimentoSelecionado(alimentoSelecionado);
-          setFiltroAlimentos(alimentoSelecionado.nome);
-      
-          return alimentosAtualizados;
-        });
-      };
-      
-      // Função chamada ao pressionar o botão "Adicionar"
-      const adicionarAlimento = () => {
-        if (alimentoSelecionado && quantidadeAlimentoSelecionado > 0) {
-          const quantidade = parseInt(quantidadeAlimentoSelecionado);
-
-          for (let i = 0; i < quantidade; i++) {
-            const alimentoComQuantidade = {
-              ...alimentoSelecionado,
-            };
-
-            setAlimentosSelecionados((prevSelecionados) => [...prevSelecionados, alimentoComQuantidade]);
-            setTotal((prevTotal) => prevTotal + 1);
-            setTotalQuantidade((prevTotalQuantidade) => prevTotalQuantidade + alimentoSelecionado.porcao);
-            setTotalCalorias((prevTotalCalorias) => prevTotalCalorias + alimentoSelecionado.qtd_calorias);
-            setTotalCarboidratos((prevTotalCarboidratos) => prevTotalCarboidratos + alimentoSelecionado.qtd_carboidratos);
-            setTotalProteinas((prevTotalProteinas) => prevTotalProteinas + alimentoSelecionado.qtd_proteinas);
-            setTotalGorduras((prevTotalGorduras) => prevTotalGorduras + alimentoSelecionado.qtd_gorduras);
-
-          }
-
-          setAlimentoSelecionado(null);
-          setFiltroAlimentos('');
-          setQuantidadeAlimentoSelecionado('');
-        }
-      };
-
-      // Função chamada ao pressionar o botão "Limpar Consumo"
-      const limparSelecao = () => {
-        setAlimentosSelecionados([]);
-        setAlimentoSelecionado(null);
-        setQuantidadeAlimentoSelecionado(0);
-        setFiltroAlimentos('');
-        setNomeRefeicao('');
-        setMostrarCampoRefeicao(true);
-        setTotalCarboidratos(0); // Zera as quantidades acumuladas de carboidratos
-        setTotalProteinas(0); // Zera as quantidades acumuladas de proteínas
-        setTotalGorduras(0); // Zera as quantidades acumuladas de gorduras
-        setTotalQuantidade(0);
-        setTotalCalorias(0);
-      };
-
-      return (
-        <PaperProvider theme={theme}>
-          <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -12}
-            style={styles.container}
-          >
-            <View style={styles.header}>
-            <Title style={styles.title}>Informar Consumo</Title>
-            </View>
-            {mostrarCampoRefeicao && (
-            <View>
-              <Text style={styles.titleRefeicao}> Nome da Refeição</Text>
-              <View style={styles.buscaContainer}>
-                <TextInput
-                  style={styles.inputBusca}
-                  label="Digite para filtrar"
-                  value={nomeRefeicao}
-                  placeholder="Digite o nome da Refeição"
-                  placeholderTextColor={'#B0B0B0'}
-                  onChangeText={setNomeRefeicao}
-                />
-              </View>
-            </View>
-            )}
-            <View>
-              <Text style={styles.titleRefeicao}> Selecione os alimentos consumidos</Text>
-              <View style={styles.buscaContainer}>
-                <TextInput
-                  style={styles.inputBusca}
-                  label="Digite para filtrar"
-                  placeholderTextColor={'#B0B0B0'}
-                  value={filtroAlimentos}
-                  placeholder="Pesquise e adicione um alimento"
-                  onChangeText={setFiltroAlimentos}
-                />
-              </View>
-            </View>
-
-            <FlatList
-              style={styles.alimentosList}
-              contentContainerStyle={styles.alimentosListContent}
-              data={filtrarAlimentos()}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }) => (
-                <List.Item
-                  title={item.nome}
-                  description={`${item.porcao}g - ${item.qtd_calorias/1000} kcal`}
-                  style={[
-                    styles.listItem,
-                    item.selecionado && styles.listItemSelecionado, // Adiciona um estilo diferente se o alimento estiver selecionado
-                  ]}
-                  titleStyle={styles.listItemTitle}
-                  descriptionStyle={styles.listItemDescription}
-                  onPress={() => toggleSelecaoAlimento(item.id)}
-                />
-              )}
-            />
-
-            {alimentoSelecionado && (
-              <>
-                <TextInput
-                  style={styles.inputQuantidade}
-                  value={quantidadeAlimentoSelecionado}
-                  onChangeText={setQuantidadeAlimentoSelecionado}
-                  keyboardType="numeric"
-                  placeholder="Digite a quantidade"
-                />
-
-                <Button
-                  mode="contained"
-                  onPress={adicionarAlimento}
-                  disabled={quantidadeAlimentoSelecionado === 0}
-                  style={styles.button}
-                  labelStyle={styles.buttonLabel}
-                >
-                  Adicionar
-                </Button>
-              </>
-            )}
-
-            {alimentosSelecionados.length > 0 && (
-              <>
-                <Text style={styles.listaAlimentosTitulo}>Alimentos Selecionados</Text>
-                <Text style={styles.listaAlimentosTitulo}>{nomeRefeicao}</Text>
-                <FlatList
-                  style={styles.alimentosSelecionadosList}
-                  contentContainerStyle={styles.alimentosSelecionadosListContent}
-                  data={alimentosSelecionados}
-                  keyExtractor={(item, index) => index.toString()}
-                  renderItem={({ item }) => (
-                    <List.Item
-                      title={item.nome}
-                      description={`${item.porcao}g - ${item.qtd_calorias/1000} kcal`}
-                      style={[styles.listItem, styles.listItemSelecionado]}
-                      titleStyle={styles.listItemTitle}
-                      descriptionStyle={styles.listItemDescription}
-                    />
-                  )}
-                />
-              </>
-            )}
-
-            <Button
-              onPress={limparSelecao}
-              style={styles.buttonClean}
-              labelStyle={styles.buttonLabelClean}
-            >
-              Limpar Consumo
-            </Button>
-
-            <Button
-              mode="contained"
-              onPress={enviarRefeicao}
-              disabled={alimentosSelecionados.length === 0}
-              style={styles.button}
-              labelStyle={styles.buttonLabel}
-              
-            >
-              Concluir Refeição
-            </Button>
-          </KeyboardAvoidingView>
-        </PaperProvider>
-      );
-    };
+const InformarConsumoScreen = () => {
+    const {
+        filtroAlimentos, setFiltroAlimentos,
+        alimentosFiltrados,
+        alimentosSelecionados,
+        alimentoSelecionado,
+        quantidadeAlimento, setQuantidadeAlimento,
+        nomeRefeicao, setNomeRefeicao,
+        mostrarCampoRefeicao,
+        selecionarAlimentoDaLista,
+        adicionarAlimentoNaRefeicao,
+        limparTudo,
+        concluirRefeicao
+    } = useInformarConsumoViewModel();
 
     const theme = {
-      ...DefaultTheme,
-      colors: {
-        ...DefaultTheme.colors,
-        primary: '#6200EE',
-      },
+        ...DefaultTheme,
+        colors: { ...DefaultTheme.colors, primary: '#38acbe' },
     };
 
-    export default InformarConsumoScreen;
+    // Renderiza a lista de alimentos selecionados
+    const renderAlimentoSelecionado = ({ item }) => (
+        <List.Item
+            title={item.nome}
+            description={`${item.porcao}g - ${(item.qtd_calorias / 1000).toFixed(2)} kcal`}
+            style={[styles.listItem, styles.listItemSelecionado]}
+            titleStyle={styles.listItemTitle}
+            descriptionStyle={styles.listItemDescription}
+        />
+    );
+
+    return (
+        <PaperProvider theme={theme}>
+            <KeyboardAvoidingView
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                style={styles.container}
+            >
+                <View style={styles.header}>
+                    <Title style={styles.title}>Informar Consumo</Title>
+                </View>
+
+                {mostrarCampoRefeicao && (
+                    <>
+                        <Text style={styles.titleRefeicao}>Nome da Refeição</Text>
+                        <TextInput
+                            style={styles.inputBusca}
+                            value={nomeRefeicao}
+                            placeholder="Ex: Almoço de Domingo"
+                            placeholderTextColor={'#B0B0B0'}
+                            onChangeText={setNomeRefeicao}
+                        />
+                    </>
+                )}
+                
+                <Text style={styles.titleRefeicao}>Selecione os alimentos consumidos</Text>
+                <TextInput
+                    style={styles.inputBusca}
+                    placeholder="Pesquise e adicione um alimento"
+                    placeholderTextColor={'#B0B0B0'}
+                    value={filtroAlimentos}
+                    onChangeText={setFiltroAlimentos}
+                />
+
+                <FlatList
+                    style={styles.alimentosList}
+                    data={alimentosFiltrados()}
+                    keyExtractor={(item) => item.id.toString()}
+                    renderItem={({ item }) => (
+                        <List.Item
+                            title={item.nome}
+                            description={`${item.porcao}g - ${(item.qtd_calorias / 1000).toFixed(2)} kcal`}
+                            style={styles.listItem}
+                            onPress={() => selecionarAlimentoDaLista(item)}
+                        />
+                    )}
+                />
+
+                {alimentoSelecionado && (
+                    <>
+                        <TextInput
+                            style={styles.inputQuantidade}
+                            value={quantidadeAlimento}
+                            onChangeText={setQuantidadeAlimento}
+                            keyboardType="numeric"
+                            placeholder="Digite a quantidade (ex: 1, 2, 3...)"
+                        />
+                        <Button mode="contained" onPress={adicionarAlimentoNaRefeicao} style={styles.button}>
+                            Adicionar
+                        </Button>
+                    </>
+                )}
+
+                {alimentosSelecionados.length > 0 && (
+                    <>
+                        <Text style={styles.listaAlimentosTitulo}>Alimentos Selecionados: {nomeRefeicao}</Text>
+                        <FlatList
+                            style={styles.alimentosSelecionadosList}
+                            data={alimentosSelecionados}
+                            keyExtractor={(item) => item.key}
+                            renderItem={renderAlimentoSelecionado}
+                        />
+                    </>
+                )}
+                
+                <View style={{marginTop: 'auto', paddingBottom: 10}}>
+                    <Button onPress={limparTudo} style={styles.buttonClean} labelStyle={styles.buttonLabelClean}>
+                        Limpar Consumo
+                    </Button>
+                    <Button
+                        mode="contained"
+                        onPress={concluirRefeicao}
+                        disabled={alimentosSelecionados.length === 0}
+                        style={styles.button}
+                    >
+                        Concluir Refeição
+                    </Button>
+                </View>
+            </KeyboardAvoidingView>
+        </PaperProvider>
+    );
+};
+
+export default InformarConsumoScreen;
