@@ -1,5 +1,3 @@
-// src/views/pages/InformarConsumo/index.js
-import React from 'react';
 import { View, Text, FlatList, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
 import { Button, List, Title, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import styles from './styles';
@@ -25,7 +23,6 @@ const InformarConsumoScreen = () => {
         colors: { ...DefaultTheme.colors, primary: '#38acbe' },
     };
 
-    // Renderiza a lista de alimentos selecionados
     const renderAlimentoSelecionado = ({ item }) => (
         <List.Item
             title={item.nome}

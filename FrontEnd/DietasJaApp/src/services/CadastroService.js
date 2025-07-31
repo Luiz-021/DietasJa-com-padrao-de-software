@@ -13,11 +13,9 @@ const cadastrar = async (username, password) => {
       username: username,
       password: password,
     });
-    // Retorna um objeto de sucesso com os dados da resposta
     return { success: true, data: response.data, status: response.status };
 
   } catch (error) {
-    // Retorna um objeto de falha com os detalhes do erro
     return { success: false, error: error.response || error };
   }
 };

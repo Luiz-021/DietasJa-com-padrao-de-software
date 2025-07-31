@@ -1,49 +1,70 @@
-import { useState } from "react";
-import { Alert } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { EditarLoginService } from '../services/EditarLoginService';
+import { useState } from 'react';
+import { Alert } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import  UsuarioRepository  from '../repositories/UsuarioRepository';
 
 export const useEditarLoginViewModel = () => {
-    const navigation = useNavigation();
-
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
-    const [novasenha, setNSenha] = useState('');
-    const [validarsenha, setValiSenha] = useState('');
+    const [novaSenha, setNovaSenha] = useState('');
+    const [confirmarNovaSenha, setConfirmarNovaSenha] = useState('');
+    const navigation = useNavigation();
 
     const handleSalvar = async () => {
-        if (email.trim() === '' || senha.trim() === '' || novasenha.trim() !== validarsenha.trim()) {
-            Alert.alert("Erro", "Informações Inválidas. Verifique se todos os campos estão preenchidos e se as novas senhas coincidem.");
+        // Lógica de validação da tela
+        if (novaSenha !== confirmarNovaSenha) {
+            Alert.alert('Erro', 'As novas senhas não coincidem.');
             return;
         }
 
         try {
-            const loginData = { email, senha: novasenha }; 
-            const response = await EditarLoginService.updateUser(loginData);
+            const dadosAtualizacao = {
+                email,
+                senha_antiga: senha,
+                senha_nova: novaSenha
+            };
+
+            const response = await UsuarioRepository.atualizarLogin(dadosAtualizacao);
 
             if (response.status === 200) {
-                Alert.alert("Sucesso", "Informações alteradas com sucesso!");
-                navigation.goBack();
-            } else {
-                console.log(response.data);
-                Alert.alert("Erro", "Não foi possível alterar as informações.");
+                Alert.alert(
+                    'Sucesso',
+                    'Seus dados de login foram atualizados. Por favor, faça login novamente.',
+                    [
+                        { 
+                            text: 'OK', 
+                            onPress: async () => {
+                                await UsuarioRepository.logout();
+                                navigation.navigate('Login'); 
+                            } 
+                        }
+                    ]
+                );
             }
         } catch (error) {
-            console.log(error.response?.data || error.message);
-            Alert.alert("Erro", "Ocorreu um problema ao salvar as alterações. Tente novamente.");
+            console.error('Erro ao atualizar login no ViewModel:', error.response?.data);
+            if (error.response?.status === 401) {
+                Alert.alert('Erro de Autenticação', 'A senha antiga está incorreta.');
+            } else {
+                Alert.alert('Erro', 'Não foi possível salvar as alterações.');
+            }
         }
     };
-
+    
     const handleVoltar = () => {
         navigation.goBack();
     };
 
     return {
-        email, setEmail,
-        senha, setSenha,
-        novasenha, setNSenha,
-        validarsenha, setValiSenha,
+        email,
+        setEmail,
+        senha,
+        setSenha,
+        novaSenha,
+        setNovaSenha,
+        confirmarNovaSenha,
+        setConfirmarNovaSenha,
         handleSalvar,
-        handleVoltar,
+        handleVoltar
     };
 };

@@ -3,95 +3,95 @@ import { StyleSheet, Dimensions } from 'react-native';
 const { width, height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    backgroundColor: "#fff",
-    paddingHorizontal: width * 0.01, 
-    width: "100%",
-    gap: 10,
-  },
-  header: {
-    backgroundColor: '#fff',
-    paddingVertical: height * 0.026, 
-    paddingHorizontal: width * 0.1, 
-    marginBottom: height * 0.01, 
-    borderRadius: width * 0.08, 
-    alignItems: "center",
-  },
-  headerText: {
-    fontSize: height * 0.030, 
-    fontWeight: 'bold',
-  },
-  messagemtitulo: {
-    fontSize: height * 0.025, 
-    fontWeight: "bold",
-    marginBottom: height * 0.02, 
-    textAlign: "center",
-  },
-  messagembottom: {
-    fontSize: height * 0.023, 
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  messagem: {
-    fontSize: height * 0.025, 
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  messagemdesc: {
-    fontSize: height * 0.027, 
-    fontWeight: "bold",
-    margin: height * 0.01, 
-    textAlign: "center",
-  },
-  infoContainer: {
-    width: width * 0.82, 
-    backgroundColor: '#38a69d',
-    borderRadius: width * 0.04,
-    height: height * 0.22, 
-  },
-  messagemcontainer:{
-    backgroundColor: "#F17163",
-    padding: height * 0.01,
-    borderRadius: width * 0.02,
-  },
-  infoItem: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingVertical: height * 0.025, 
-    paddingHorizontal: width * 0.03, 
-    marginBottom: height * 0.024, 
-  },
-  infoLabel: {
-    fontSize: height * 0.023, 
-    fontWeight: "bold",
-  },
-  infoValue: {
-    fontSize: height * 0.023, 
-  },
-  abaixopeso: {
-    backgroundColor: "#FFCCCC",
-  },
-  normal: {
-    backgroundColor: "#04C84E",
-  },
-  acimapeso: {
-    backgroundColor: "#FFFFCC",
-  },
-  obesidade: {
-    backgroundColor: "#FFCCCC",
-  },
-  baixoTmb: {
-    backgroundColor: "#FFCCCC",
-  },
-  normalTmb: {
-    backgroundColor: "#04C84E",
-  },
-  altoTmb: {
-    backgroundColor: "#FFFFCC",
-  },
+    container: {
+        flex: 1,
+        alignItems: "center",
+        backgroundColor: "#f7f8fa",
+        paddingVertical: 20,
+    },
+    headerText: {
+        fontSize: 26,
+        fontWeight: 'bold',
+        marginTop: 10,
+        marginBottom: 8,
+        color: '#333',
+    },
+    subHeaderText: {
+        fontSize: 16,
+        color: '#777',
+        textAlign: 'center',
+        marginBottom: 24,
+        paddingHorizontal: 20,
+    },
+    card: {
+        width: width * 0.9,
+        backgroundColor: '#fff',
+        borderRadius: 16,
+        padding: 20,
+        marginBottom: 20,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 4,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 10,
+        elevation: 8,
+    },
+    cardTitle: {
+        fontSize: 18,
+        fontWeight: '600',
+        color: '#555',
+        marginBottom: 16,
+    },
+    indexRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 16,
+    },
+    indexValue: {
+        fontSize: 42,
+        fontWeight: 'bold',
+    },
+    indexLabel: {
+        fontSize: 16,
+        color: '#888',
+        marginTop: 4,
+    },
+    statusRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#f7f8fa',
+        paddingVertical: 12,
+        paddingHorizontal: 16,
+        borderRadius: 12,
+    },
+    statusText: {
+        marginLeft: 10,
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    alertBox: {
+        width: width * 0.9,
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#FFF1F0',
+        borderRadius: 12,
+        padding: 16,
+        borderLeftWidth: 5,
+        borderLeftColor: '#F17163',
+    },
+    alertText: {
+        marginLeft: 10,
+        fontSize: 15,
+        color: '#D94C3D',
+        flex: 1,
+    },
+
+    colorNormal: { color: '#04C84E' },
+    colorWarning: { color: '#F2994A' },
+    colorDanger: { color: '#D94C3D' },
 });
 
 export default styles;

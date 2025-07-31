@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { VisualizarIndService } from '../services/VisualizarIndService';
-import styles from '../views/pages/VisualizarInd/styles';
+import PerfilRepository from '../repositories/PerfilRepository';
 
 export const useVisualizarIndViewModel = () => {
     const navigation = useNavigation();
@@ -13,73 +12,42 @@ export const useVisualizarIndViewModel = () => {
         const fetchData = async () => {
             setIsLoading(true);
             try {
-                const response = await VisualizarIndService.getIndices();
-                const data = response.data;
-                setImc(parseFloat(data.imc || 0));
-                setTmb(parseFloat(data.tmb || 0));
+                const response = await PerfilRepository.getMetricas();
+                if (response.success) {
+                    const data = response.data;
+                    setImc(parseFloat(data.imc || 0));
+                    setTmb(parseFloat(data.tmb || 0));
+                }
             } catch (error) {
                 console.log('Erro ao buscar índices:', error);
             } finally {
                 setIsLoading(false);
             }
         };
-
         fetchData();
-        const unsubscribe = navigation.addListener('focus', fetchData);
-        return unsubscribe;
-    }, [navigation]);
+    }, []);
 
-    // Lógica para derivar o estado da UI a partir dos dados (IMC)
-    // useMemo otimiza o cálculo para que ele só rode quando o IMC mudar
     const imcInfo = useMemo(() => {
         const imcValue = parseFloat(imc);
         if (imcValue < 18.5) {
-            return {
-                style: styles.abaixopeso,
-                icon: "warning",
-                message: "Abaixo do peso"
-            };
+            return { status: 'danger', icon: "warning", message: "Abaixo do peso" };
         } else if (imcValue < 25) {
-            return {
-                style: styles.normal,
-                icon: "checkcircleo",
-                message: "Peso normal"
-            };
+            return { status: 'normal', icon: "checkcircleo", message: "Peso normal" };
         } else if (imcValue < 30) {
-            return {
-                style: styles.acimapeso,
-                icon: "exclamationcircleo",
-                message: "Sobrepeso"
-            };
+            return { status: 'warning', icon: "exclamationcircleo", message: "Sobrepeso" };
         } else {
-            return {
-                style: styles.obesidade,
-                icon: "warning",
-                message: "Acima do peso"
-            };
+            return { status: 'danger', icon: "warning", message: "Obesidade" };
         }
     }, [imc]);
 
     const tmbInfo = useMemo(() => {
         const tmbValue = parseFloat(tmb);
         if (tmbValue < 1500) {
-            return {
-                style: styles.baixoTmb,
-                icon: "exclamationcircleo",
-                message: "Baixo nível de atividade"
-            };
-        } else if (tmbValue < 2000) {
-            return {
-                style: styles.normalTmb,
-                icon: "checkcircleo",
-                message: "Nível de atividade moderado"
-            };
+            return { status: 'warning', icon: "exclamationcircleo", message: "Metabolismo Lento" };
+        } else if (tmbValue < 2500) {
+            return { status: 'normal', icon: "checkcircleo", message: "Metabolismo Normal" };
         } else {
-            return {
-                style: styles.altoTmb,
-                icon: "warning",
-                message: "Alto nível de atividade"
-            };
+            return { status: 'warning', icon: "infocirlceo", message: "Metabolismo Acelerado" };
         }
     }, [tmb]);
 

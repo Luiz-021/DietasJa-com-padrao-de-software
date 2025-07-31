@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { PratoService } from '../services/PratoService';
+import  PratoRepository  from '../repositories/PratoRepository';
 
 export const useCadastrarPratoViewModel = () => {
     const [nome, setNome] = useState("");
@@ -25,21 +25,8 @@ export const useCadastrarPratoViewModel = () => {
     const fetchAlimentos = async () => {
         setIsLoading(true);
         try {
-            const response = await PratoService.getAlimentos();
-            if (response.status === 200) {
-                const pratos = response.data.map(item => ({
-                    id: item.id,
-                    nome: item.nome,
-                    quantidade: item.porcao,
-                    kcal: (item.qtd_calorias / 1000).toFixed(2),
-                    proteinas: item.qtd_proteinas,
-                    carboidratos: item.qtd_carboidratos,
-                    gorduras: item.qtd_gorduras,
-                }));
-                setListaPratos(pratos);
-            } else {
-                setListaPratos([]);
-            }
+            const pratos = await PratoRepository.getAlimentos();
+            setListaPratos(pratos);
         } catch (error) {
             console.log('Erro ao buscar alimentos: ', error);
             setListaPratos([]);
@@ -50,17 +37,11 @@ export const useCadastrarPratoViewModel = () => {
 
     const adicionarPrato = async () => {
         if (!validarCampos()) return;
-
-        // **CORREÇÃO APLICADA AQUI**
-        // Convertendo os valores de string para número antes de enviar para a API
         const pCarboidratos = parseFloat(carboidratos.replace(',', '.'));
         const pProteinas = parseFloat(proteinas.replace(',', '.'));
         const pGorduras = parseFloat(gorduras.replace(',', '.'));
         const pQuantidade = parseInt(quantidade, 10);
-
-        // Mantida a lógica de cálculo de calorias original
         const calorias = 4000 * (pProteinas + pCarboidratos) + 9000 * pGorduras;
-        
         const novoPratoData = {
             nome: nome,
             porcao: pQuantidade,
@@ -72,16 +53,14 @@ export const useCadastrarPratoViewModel = () => {
         };
 
         try {
-            const response = await PratoService.addAlimento(novoPratoData);
+            // A chamada agora é para o repositório
+            const response = await PratoRepository.addAlimento(novoPratoData);
             if (response.status === 200 || response.status === 201) {
-                fetchAlimentos(); // Recarregar a lista para exibir o novo item
+                fetchAlimentos();
                 limparCampos();
                 Alert.alert("Sucesso", "Alimento cadastrado com sucesso!");
-            } else if (response.status === 400) {
-                // A mensagem de erro foi melhorada para ser mais clara
-                Alert.alert("Erro de Validação", "Verifique os dados informados. É possível que já exista um alimento com este nome ou os valores são inválidos.");
             } else {
-                throw new Error('Erro desconhecido ao adicionar alimento');
+                 Alert.alert("Erro de Validação", "Verifique os dados informados. É possível que já exista um alimento com este nome ou os valores são inválidos.");
             }
         } catch (error) {
             console.log('Erro ao adicionar prato: ', error);
@@ -89,20 +68,10 @@ export const useCadastrarPratoViewModel = () => {
         }
     };
 
-    const handleDeleteItem = (id) => {
-        Alert.alert(
-            "Confirmar exclusão",
-            `Deseja realmente excluir o alimento?`,
-            [
-                { text: 'Cancelar', style: 'cancel' },
-                { text: 'Confirmar', onPress: () => deletePrato(id) }
-            ],
-        );
-    };
-
     const deletePrato = async (idAlimento) => {
         try {
-            const response = await PratoService.deleteAlimento(idAlimento);
+            // A chamada agora é para o repositório
+            const response = await PratoRepository.deleteAlimento(idAlimento);
             if (response.status === 204 || response.status === 200) {
                 setListaPratos(prev => prev.filter(prato => prato.id !== idAlimento));
                 Alert.alert("Sucesso", "Alimento excluído com sucesso!");
@@ -148,7 +117,7 @@ export const useCadastrarPratoViewModel = () => {
         isLoading,
         caloriasCalculadas,
         adicionarPrato,
-        handleDeleteItem,
+        deletePrato,
         handleVoltar
     };
 };

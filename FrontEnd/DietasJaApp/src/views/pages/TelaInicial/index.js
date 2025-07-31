@@ -1,8 +1,25 @@
 import React from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
+import { View, Text, ActivityIndicator, ScrollView } from 'react-native';
 import styles from "./styles";
 import * as Animatable from 'react-native-animatable';
 import { useTelaInicialViewModel } from '../../../viewModels/TelaInicialViewModel';
+import * as Progress from 'react-native-progress';
+
+// Componente para a Barra de Progresso de Macros
+const MacroProgressBar = ({ label, consumido, meta, color }) => {
+    const progresso = meta > 0 ? consumido / meta : 0;
+    return (
+        <View style={styles.macroRow}>
+            <View style={styles.macroInfo}>
+                <Text style={styles.macroLabel}>{label}</Text>
+                <Text style={styles.macroValues}>{consumido.toFixed(1)}g / {meta.toFixed(1)}g</Text>
+            </View>
+            <View style={styles.progressBarBackground}>
+                <View style={[styles.progressBarFill, { width: `${progresso * 100}%`, backgroundColor: color }]} />
+            </View>
+        </View>
+    );
+};
 
 export default function TelaInicial() {
     const {
@@ -13,59 +30,61 @@ export default function TelaInicial() {
         proteina,
         gordura,
         resto,
+        progresso,
+        metaCarb,
+        metaProteina,
+        metaGordura,
         isLoading,
     } = useTelaInicialViewModel();
 
     if (isLoading) {
         return (
-            <View style={styles.container}>
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <ActivityIndicator size="large" color="#38acbe" />
             </View>
         );
     }
 
     return (
-        <View style={styles.container}>
-            <View style={styles.containerTexto}>
+        <ScrollView contentContainerStyle={styles.container}>
+            <View style={styles.greetingContainer}>
                 <Text style={styles.greetingText}>Olá, {nome}</Text>
             </View>
-            <Animatable.View animation="fadeInLeft" delay={500} style={styles.rectangle}>
-                <Text style={styles.infoTitle}>Meta de Calorias Diárias</Text>
-                <View style={styles.separator} />
-                <Text style={styles.infoValue}>{meta} Kcal</Text>
-            </Animatable.View>
 
-            <Animatable.View animation="fadeInLeft" delay={600} style={styles.redrectangle}>
-                <Text style={styles.infoTitle}>Calorias Consumidas</Text>
-                <View style={styles.separator} />
-                <Text style={styles.infoValue}>{consumo} Kcal</Text>
+            <Animatable.View animation="fadeInUp" delay={200} style={styles.caloriesCard}>
+                <View style={styles.progressCircleContainer}>
+                    <Progress.Circle
+                        size={180}
+                        progress={progresso}
+                        thickness={15}
+                        color={'#38a69d'}
+                        unfilledColor={'#e9ecef'}
+                        borderWidth={0}
+                        showsText={false}
+                    />
+                    <View style={styles.caloriesRemainingContainer}>
+                        <Text style={styles.caloriesRemainingValue}>{resto.toFixed(0)}</Text>
+                        <Text style={styles.caloriesRemainingLabel}>Kcal Restantes</Text>
+                    </View>
+                </View>
+                <View style={styles.calorieInfoRow}>
+                    <View style={styles.calorieInfoBox}>
+                        <Text style={styles.calorieInfoLabel}>Meta</Text>
+                        <Text style={styles.calorieInfoValue}>{meta.toFixed(0)}</Text>
+                    </View>
+                    <View style={styles.calorieInfoBox}>
+                        <Text style={styles.calorieInfoLabel}>Consumo</Text>
+                        <Text style={styles.calorieInfoValue}>{consumo.toFixed(0)}</Text>
+                    </View>
+                </View>
             </Animatable.View>
-
-            <Animatable.View animation="fadeInLeft" delay={700} style={styles.macronutrientsRectangle}>
-                <View />
-                <View style={styles.macronutrientContainer}>
-                    <Text style={styles.macronutrientTitle}>Carboidratos</Text>
-                    <Text style={styles.macronutrientValueCarb}>{carb}g</Text>
-                </View>
-                <View style={styles.divider} />
-                <View style={styles.macronutrientContainer}>
-                    <Text style={styles.macronutrientTitle}>Proteínas</Text>
-                    <Text style={styles.macronutrientValue}>{proteina}g</Text>
-                </View>
-                <View style={styles.divider} />
-                <View style={styles.macronutrientContainer}>
-                    <Text style={styles.macronutrientTitle}>Gorduras </Text>
-                    <Text style={styles.macronutrientValue}>{gordura}g</Text>
-                </View>
+            
+            <Animatable.View animation="fadeInUp" delay={400} style={styles.macrosCard}>
+                <Text style={styles.cardTitle}>Macronutrientes</Text>
+                <MacroProgressBar label="Carboidratos" consumido={carb} meta={metaCarb} color="#3498db" />
+                <MacroProgressBar label="Proteínas" consumido={proteina} meta={metaProteina} color="#f1c40f" />
+                <MacroProgressBar label="Gorduras" consumido={gordura} meta={metaGordura} color="#e74c3c" />
             </Animatable.View>
-
-            {resto > 0 && (
-                <View style={styles.remainingCaloriesContainer}>
-                    <Text style={styles.remainingCaloriesText}>
-                        Faltam {resto} calorias para consumir hoje
-                    </Text>
-                </View>
-            )}
-        </View>
+        </ScrollView>
     );
 }

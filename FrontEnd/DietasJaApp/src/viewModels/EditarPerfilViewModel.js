@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Alert } from "react-native";
 import { useNavigation } from '@react-navigation/native';
-import { EditarPerfilService } from '../services/EditarPerfilService';
+import PerfilRepository from '../repositories/PerfilRepository';
 
 export const useEditarPerfilViewModel = () => {
     const [nome, setNome] = useState('');
@@ -25,8 +25,8 @@ export const useEditarPerfilViewModel = () => {
     const fetchUserInfo = async () => {
         setIsLoading(true);
         try {
-            const response = await EditarPerfilService.getUserMetrics();
-            if (response.status === 200) {
+            const response = await PerfilRepository.getMetricas();
+            if (response.success) {
                 const { nome, peso, altura, idade, genero } = response.data;
                 setNome(nome || '');
                 setPeso(peso?.toString() || '');
@@ -35,7 +35,6 @@ export const useEditarPerfilViewModel = () => {
                 setSexo(genero || null);
             }
         } catch (error) {
-            console.error("Erro ao buscar dados do perfil:", error);
             Alert.alert("Erro", "Não foi possível carregar os dados do perfil.");
         } finally {
             setIsLoading(false);
@@ -54,15 +53,14 @@ export const useEditarPerfilViewModel = () => {
         };
 
         try {
-            const response = await EditarPerfilService.updateUserMetrics(userData);
-            if (response.status === 200) {
+            const response = await PerfilRepository.atualizarMetricas(userData);
+            if (response.success) {
                 Alert.alert("Sucesso", "Suas alterações foram salvas com sucesso.");
                 navigation.goBack();
             } else {
                  Alert.alert("Erro", "Não foi possível salvar as alterações.");
             }
         } catch (error) {
-            console.error("Erro ao salvar alterações:", error);
             Alert.alert("Erro", "Ocorreu um erro ao salvar as alterações.");
         }
     };
@@ -81,15 +79,6 @@ export const useEditarPerfilViewModel = () => {
     };
 
     return {
-        nome, setNome,
-        peso, setPeso,
-        altura, setAltura,
-        idade, setIdade,
-        sexo, setSexo,
-        isOpen, setIsOpen,
-        items,
-        isLoading,
-        salvarAlteracoes,
-        handleVoltar,
+        nome, setNome, peso, setPeso, altura, setAltura, idade, setIdade, sexo, setSexo, isOpen, setIsOpen, items, isLoading, salvarAlteracoes, handleVoltar,
     };
 };

@@ -8,8 +8,8 @@ import { useLoginViewModel } from '../../../viewModels/LoginViewModel';
 export default function Login({ handleLogin }) {
   const navigation = useNavigation();
   const {
-    email,
-    setEmail,
+    username,
+    setUsername,
     senha,
     setSenha,
     erroLogin,
@@ -27,8 +27,8 @@ export default function Login({ handleLogin }) {
         <Text style={styles.title}>Nome de Usuário</Text>
         <TextInput
           style={styles.estiloinput}
-          onChangeText={setEmail}
-          value={email}
+          onChangeText={setUsername}
+          value={username}
           placeholder="Digite seu nome de usuário"
           placeholderTextColor={'#999'}
           keyboardType="ascii-capable"

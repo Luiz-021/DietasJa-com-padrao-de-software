@@ -1,4 +1,3 @@
-import React from "react";
 import { Text, View, TextInput, TouchableOpacity, FlatList, ScrollView, SafeAreaView, ActivityIndicator } from "react-native";
 import styles from "./styles";
 import { useCadastrarPratoViewModel } from "../../../viewModels/CadastrarPratoViewModel";
@@ -14,7 +13,7 @@ export default function CadastrarPrato() {
         isLoading,
         caloriasCalculadas,
         adicionarPrato,
-        handleDeleteItem,
+        deletePrato,
         handleVoltar
     } = useCadastrarPratoViewModel();
 
@@ -74,7 +73,7 @@ export default function CadastrarPrato() {
                                         <Text style={styles.itemDescricao}>
                                             Qtd: {item.quantidade}g, Gor: {item.gorduras}g, Car: {item.carboidratos}g, Pro: {item.proteinas}g, Kcal: {item.kcal}
                                         </Text>
-                                        <TouchableOpacity style={styles.deleteButton} onPress={() => handleDeleteItem(item.id)}>
+                                        <TouchableOpacity style={styles.deleteButton} onPress={() => deletePrato(item.id)}>
                                             <Text style={styles.deleteButtonText}>Excluir</Text>
                                         </TouchableOpacity>
                                     </View>

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { PrimeiroAcessoService } from '../services/PrimeiroAcessoService';
+import PerfilRepository from '../repositories/PerfilRepository';
 
 export const usePrimeiroAcessoViewModel = () => {
     const navigation = useNavigation();
@@ -42,17 +42,18 @@ export const usePrimeiroAcessoViewModel = () => {
 
         try {
             const userData = { nome, valoratual, idade, altura, peso };
-            const response = await PrimeiroAcessoService.cadastrarMetricas(userData);
+            // 2. Usar o método unificado do repositório
+            const response = await PerfilRepository.cadastrarMetricas(userData);
 
-            if (response.status === 201) {
-                Alert.alert("Bem-vindo", "Usuário criado com sucesso");
+            if (response.success) {
+                Alert.alert("Bem-vindo", "Dados salvos com sucesso!");
                 navigation.navigate('Login');
             } else {
-                console.log(response.data);
+                Alert.alert("Erro", "Não foi possível salvar seus dados, tente novamente mais tarde");
             }
         } catch (error) {
-            Alert.alert("Erro", "Não foi possível criar o usuário, tente novamente mais tarde");
-            console.log(error.response?.data || error.message);
+            Alert.alert("Erro", "Ocorreu um problema de comunicação. Tente novamente mais tarde.");
+            console.log(error);
         }
     };
 

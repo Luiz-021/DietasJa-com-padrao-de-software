@@ -7,7 +7,6 @@ const cadastrarMetricas = async (userData) => {
 
     const genero = userData.valoratual === 'masculino' ? 'M' : 'F';
 
-    // Monta o payload para a requisição
     const dataToSend = {
         nome: userData.nome,
         genero: genero,

@@ -10,65 +10,54 @@ export const useTelaInicialViewModel = () => {
     const [carb, setCarb] = useState(0);
     const [proteina, setProteina] = useState(0);
     const [gordura, setGordura] = useState(0);
-    const [resto, setResto] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
     const navigation = useNavigation();
 
-    useEffect(() => {
-        enviarSolicitacaoGET();
-        const unsubscribe = navigation.addListener('focus', () => {
-            enviarSolicitacaoGET();
-        });
-        return unsubscribe;
-    }, [navigation]);
+    const [metaCarb, setMetaCarb] = useState(0);
+    const [metaProteina, setMetaProteina] = useState(0);
+    const [metaGordura, setMetaGordura] = useState(0);
+
+    const resto = meta > consumo ? meta - consumo : 0;
+    const progresso = meta > 0 ? consumo / meta : 0;
 
     useEffect(() => {
-        const novoResto = meta - consumo;
-        setResto(novoResto.toFixed(2)); // Arredondando para evitar muitas casas decimais
-    }, [meta, consumo]);
-
-    async function enviarSolicitacaoGET() {
-        setIsLoading(true);
-        try {
-            // As chamadas foram mantidas separadas para preservar a lógica de erro original
+        const enviarSolicitacaoGET = async () => {
+            setIsLoading(true);
             try {
                 const respostanome = await TelaInicialService.getUserMetrics();
                 setNome(respostanome.data.nome);
-            } catch (error) {
-                console.log('Erro na solicitação de nome:', error);
-            }
 
-            try {
                 const respostameta = await TelaInicialService.getMeta();
                 if (respostameta.data && respostameta.data.length > 0) {
-                    const qtdCalorias = (respostameta.data[0]['qtd_calorias']) / 1000;
-                    setMeta(qtdCalorias);
+                    const metaKcal = respostameta.data[0]['qtd_calorias'] / 1000;
+                    setMeta(metaKcal);
+
+                    // Lógica para calcular metas de macros (ex: 40% C, 30% P, 30% G)
+                    setMetaCarb((metaKcal * 0.40) / 4);
+                    setMetaProteina((metaKcal * 0.30) / 4);
+                    setMetaGordura((metaKcal * 0.30) / 9);
                 } else {
-                     // Se a API retorna 200 com array vazio, trata como se não tivesse meta
-                    throw new Error("Meta não encontrada");
+                    setMeta(0);
+                    Alert.alert("Bem vindo(a)!", "Você ainda não possui uma meta. Cadastre-a em Editar Meta.");
                 }
-            } catch (error) {
-                setMeta(0); // Garante que a meta seja 0 se não for encontrada
-                console.log('Erro na solicitação de meta:', error);
-                Alert.alert("Bem vindo(a)!", "Você ainda não possui uma meta cadastrada!\nCadastre-a em Editar Meta no menu lateral.");
-            }
 
-            try {
                 const respostaconsumo = await TelaInicialService.getConsumoDia();
-                setConsumo((respostaconsumo.data.calorias_consumidas) / 1000);
-                setCarb(parseFloat(respostaconsumo.data.qtd_carboidratos).toFixed(2));
-                setProteina(parseFloat(respostaconsumo.data.qtd_proteinas).toFixed(2));
-                setGordura(parseFloat(respostaconsumo.data.qtd_gorduras).toFixed(2));
-            } catch (error) {
-                console.log('Erro na solicitação de consumo:', error);
-            }
+                setConsumo((respostaconsumo.data.calorias_consumidas || 0) / 1000);
+                setCarb(parseFloat(respostaconsumo.data.qtd_carboidratos || 0));
+                setProteina(parseFloat(respostaconsumo.data.qtd_proteinas || 0));
+                setGordura(parseFloat(respostaconsumo.data.qtd_gorduras || 0));
 
-        } catch (error) {
-            console.log('Erro geral ao executar GET:', error);
-        } finally {
-            setIsLoading(false);
-        }
-    }
+            } catch (error) {
+                console.log('Erro ao carregar dados da tela inicial:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        const unsubscribe = navigation.addListener('focus', enviarSolicitacaoGET);
+        enviarSolicitacaoGET();
+        return unsubscribe;
+    }, [navigation]);
 
     return {
         nome,
@@ -78,6 +67,10 @@ export const useTelaInicialViewModel = () => {
         proteina,
         gordura,
         resto,
+        progresso,
+        metaCarb,
+        metaProteina,
+        metaGordura,
         isLoading,
     };
 };

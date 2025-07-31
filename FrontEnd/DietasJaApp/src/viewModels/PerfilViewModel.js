@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { PerfilService } from '../services/PerfilService';
+import PerfilRepository from '../repositories/PerfilRepository';
 
 export const usePerfilViewModel = () => {
     const navigation = useNavigation();
@@ -11,35 +11,31 @@ export const usePerfilViewModel = () => {
     const [altura, setAltura] = useState('');
     const [peso, setPeso] = useState('');
     const [isLoading, setIsLoading] = useState(true);
-    const [load, setLoad] = useState(true);
 
     useEffect(() => {
         const fetchUserInfo = async () => {
             setIsLoading(true);
             try {
-                const response = await PerfilService.getUserMetrics();
-                if (response.status === 200) {
+                const response = await PerfilRepository.getMetricas();
+                if (response.success) {
                     const { nome, genero, idade, altura, peso } = response.data;
                     setNome(nome);
                     setSexo(genero);
                     setIdade(idade);
                     setAltura(altura * 100);
                     setPeso(peso);
-                } else {
-                    console.log(response.data);
-                }
-            } catch (error) {
-                if (error.response?.status === 401) {
+                } else if (response.error?.status === 401) {
                     navigation.navigate('Login');
                 }
+            } catch (error) {
                 console.log(error);
             } finally {
                 setIsLoading(false);
             }
         };
 
+        const unsubscribe = navigation.addListener('focus', fetchUserInfo);
         fetchUserInfo();
-        const unsubscribe = navigation.addListener('focus', () => fetchUserInfo());
         return unsubscribe;
 
     }, [navigation]);
@@ -51,12 +47,6 @@ export const usePerfilViewModel = () => {
     const handleVoltar = () => {
         navigation.goBack();
     };
-
-    // A função para 'EditarLogin' foi removida do seu código original,
-    // mas se precisar, pode adicionar aqui:
-    // const handleAlterarCadastro = () => {
-    //     navigation.navigate('EditarLogin')
-    // }
 
     return {
         nome,
