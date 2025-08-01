@@ -61,7 +61,7 @@ src/
 2.  Instale as dependências:**
     # Navegue até a pasta do frontend e instale os pacotes
     ```
-    cd Base/FrontEnd/FrontEnd
+    cd /FrontEnd/dietasjaapp
     npm install
     ```
 3.  Configure a API:**
@@ -69,14 +69,30 @@ src/
     * Altere a variável `API_BASE_URL` para o endereço da sua API backend.
 
 4.  Execute o aplicativo:
+   Para rodar a aplicação, você precisará abrir 3 terminais separados.
+   Terminal 1: Rodar o Banco de Dados (Docker)
+   ```
+   # A partir da pasta root, suba os contêineres do Docker
+   docker-compose up --build
+   ```
+   
+   Terminal 2: Rodar o Backend (API Django)
+   ```
+   # A partir da pasta do backend 'Base/Backend/api'
+   cd Base/Backend/api
 
-    * **Para Android:**
-        ```bash
-        npx react-native run-android
-        ```
-    * **Para iOS:**
-        ```bash
-        npx react-native run-ios
-        ```
+   # Ative o ambiente virtual (Windows)
+   .\venv\Scripts\activate
 
+   # Inicie o servidor Django
+   python manage.py runserver 0.0.0.0:8000
+   ```
+
+   Terminal 3: Rodar o Frontend (React Native)
+   ```
+   # A partir da pasta do frontend 'Base/FrontEnd/FrontEnd'
+   cd Base/FrontEnd/FrontEnd
+   npm start
+   ```
+   
 
