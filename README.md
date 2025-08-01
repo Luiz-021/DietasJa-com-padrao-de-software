@@ -37,14 +37,14 @@ O projeto foi arquitetado para ser escalável, testável e de fácil manutençã
 ## 📂 Estrutura de Pastas
 
 src/
-|-- assets/         # Imagens, fontes e outros recursos estáticos
-|-- components/     # Componentes de UI reutilizáveis
-|-- navigation/     # Configuração das rotas e navegação do app
-|-- repositories/   # Camada de abstração de dados (Repository)
-|-- services/       # Camada de comunicação com a API
-|-- viewModels/     # Lógica e estado das telas (ViewModel)
-|-- views/          # Telas e seus estilos (View)
-|-- config.js       # Configurações globais (ex: URL da API)
+|-- assets/         
+|-- components/     
+|-- navigation/     
+|-- repositories/   
+|-- services/       
+|-- viewModels/     
+|-- views/          
+|-- config.js       
 
 
 ## ⚙️ Como Executar o Projeto
@@ -78,8 +78,7 @@ src/
    
    Terminal 2: Rodar o Backend (API Django)
    ```
-   # A partir da pasta do backend 'Base/Backend/api'
-   cd Base/Backend/api
+   cd Backend/api
 
    # Ative o ambiente virtual (Windows)
    .\venv\Scripts\activate
@@ -90,8 +89,8 @@ src/
 
    Terminal 3: Rodar o Frontend (React Native)
    ```
-   # A partir da pasta do frontend 'Base/FrontEnd/FrontEnd'
-   cd Base/FrontEnd/FrontEnd
+   # A partir da pasta root
+   cd FrontEnd/FrontEnd
    npm start
    ```
    
