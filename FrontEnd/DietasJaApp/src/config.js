@@ -4,5 +4,6 @@
 
 //export const API_BASE_URL = 'https://bedc-2804-29b8-516a-970-b0dc-69ee-92f7-7b89.ngrok-free.app' + '/api';
 
+//Está funcionadno apenas com o ip do computador.
 export const API_BASE_URL = 'http://10.0.0.173:8000';
 
