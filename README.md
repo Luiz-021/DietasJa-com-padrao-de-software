@@ -1,50 +1,145 @@
-# Dietas Já
-Repositorio para o projeto da cadeira de Engenharia de Software.
-* Python com Django, para o back-end;
-* React Native (JS), HTML/CSS e Expo, para o front-end);
-* Postgres, para a persistência de dados.
+# DietasJá - Aplicativo de Nutrição
 
-## Descrição:
-O Dietas Já possibilita o acompanhamento da ingestão diária de calorias, além de
-oferecer recompensa ao usuário (com foco na motivação para o cumprimento da dieta).
+![DietasJá Logo](https://i.imgur.com/rG2v0g3.png)
 
-Ao se cadastrar (através de login e senha únicos), o usuário deverá inserir seu nome
-e sobrenome, informações acerca da sua dieta, meta diária de consumo de calorias, além do
-seu peso e altura (para cálculo do IMC).
+O **DietasJá** é um aplicativo móvel, desenvolvido em React Native, focado em auxiliar usuários no controle de suas dietas e no acompanhamento de sua saúde nutricional. A aplicação permite o monitoramento detalhado do consumo de calorias e macronutrientes, o estabelecimento de metas personalizadas e a visualização do progresso através de um dashboard moderno e interativo.
 
-Diariamente e a cada refeição, ele deverá informar no aplicativo quais alimentos
-foram consumidos (caso não encontre um alimento nas opções disponíveis, ele poderá
-adicioná-lo, junto com sua informação calórica).
+## ✨ Funcionalidades
 
-Ao longo do dia, o usuário poderá consultar quanto da sua meta diária já foi atingida
-para planejar as próximas refeições e, ao final do dia, visualizar se a meta diária foi cumprida
-ou ultrapassada.
+* **Autenticação Completa:** Sistema de cadastro e login de usuários.
+* **Perfil de Saúde Detalhado:** O usuário insere dados como peso, altura, idade e gênero, que são usados para cálculos personalizados.
+* **Dashboard Visual:** Uma tela inicial moderna com um gráfico circular de progresso para calorias e barras de progresso para macronutrientes, oferecendo um feedback visual imediato.
+* **Metas Calóricas:** Funcionalidade completa para o usuário cadastrar e editar sua meta de calorias diárias.
+* **Registro de Consumo:** Uma interface intuitiva para pesquisar alimentos, definir a porção consumida e registrar refeições completas com nome personalizado.
+* **Cadastro de Alimentos:** Permite que os usuários adicionem seus próprios alimentos à base de dados, informando seus respectivos macronutrientes.
+* **Histórico Semanal:** Tela com o resumo do consumo dos últimos 7 dias, destacando o cumprimento das metas diárias.
+* **Índices de Saúde:** Cálculo e exibição automática do IMC (Índice de Massa Corporal) e TMB (Taxa de Metabolismo Basal) em cards informativos.
 
-Para ajudá-lo a seguir a dieta de maneira consistente, um desafio será realizado: a
-cada sete dias dentro da meta diária de consumo de calorias, o usuário ganhará uma
-recompensa (poderá consumir um doce fora daquilo que está planejado na dieta). Além
-disso, para enfatizar/encorajar as conquistas, o usuário poderá visualizar seu desempenho
-nos últimos sete dias.
+## 🚀 Arquitetura e Padrões de Projeto
 
-## Passo a Passo para Uso do Git:
-Para começar a mexer numa funcionalidade faça:
-1) Entre no site do github:
-* Crie uma issue com o nome issue-n°: algo
-* Crie uma branch com o nome issue-n° baseada na main
+O projeto foi arquitetado para ser escalável, testável e de fácil manutenção, utilizando padrões de design modernos que separam as responsabilidades de forma clara:
 
-2) Na sua maquina:
-* Sincronize o Github Desktop ou use o comando "git pull" no terminal(estando na branch main)
-* Mude para a branch issue-n° no Github Desktop ou use o comando "git switch issue-n°" no terminal
+* **MVVM (Model-View-ViewModel):** A arquitetura principal que separa a interface do usuário (View), a lógica de estado e apresentação (ViewModel) e os dados (Model).
+    * **View:** As telas, localizadas em `src/views/pages`.
+    * **ViewModel:** A lógica e o estado de cada tela, localizados em `src/viewModels`.
+    * **Model:** A camada de dados, abstraída pelos Repositórios.
+* **Repository Pattern:** Cria uma camada de abstração para o acesso a dados. Os ViewModels não interagem diretamente com a API, mas sim com um Repositório, que centraliza a lógica de onde e como buscar as informações. Os repositórios estão em `src/repositories`.
+* **Singleton Pattern:** Cada repositório é implementado como um Singleton, garantindo que exista apenas uma única instância e um ponto de acesso global e consistente aos dados em todo o aplicativo, evitando inconsistências de estado.
 
-3) Depois de fazer as primeira mudanças na sua maquina, antes do commit faça:
-* Adcione no nome do commit [#n°]: seja na aba de nome da mensagem no Github Desktop ou no comando "git commit -m "[#n°]: Mensagem" "
-* Depois de feito os commits do dia, aperte no botão push do Github Desktop ou use o comando "git push"
+## 🛠️ Tecnologias e Bibliotecas
 
-4) Após 100% a funcionalidade:
-* Entre no site do github e aperte o botão "Compare and Pull Request"
-* Crie um Pull Request
-* Caso outra pessoa tenha testa e esteja acesso o botão de merge automatico, dê o merge
-* Caso outra pessoa n tenha testado não dê o merge
-* Caso tenha sido testado mas não dá para fazer o merge automaticamente, chame o Vinicius para resolverem os conflitos manualmente.
+* [**React Native**](https://reactnative.dev/)
+* [**React Navigation**](https://reactnavigation.org/): Gerenciamento de navegação (Stack, Tab e Drawer).
+* [**Axios**](https://axios-http.com/): Cliente HTTP para comunicação com a API.
+* [**React Native Paper**](https://reactnativepaper.com/): Biblioteca de componentes de UI baseada em Material Design.
+* [**React Native Animatable**](https://github.com/oblador/react-native-animatable): Para animações declarativas.
+* [**React Native Progress**](https://github.com/oblador/react-native-progress): Para os componentes visuais de progresso (círculos e barras).
+* [**AsyncStorage**](https://react-native-async-storage.github.io/async-storage/): Para armazenamento local de dados persistentes (ex: token de autenticação).
 
-5) Beba água e seja feliz.
+## 📂 Estrutura de Pastas
+
+src/
+|-- assets/         # Imagens, fontes e outros recursos estáticos
+|-- components/     # Componentes de UI reutilizáveis
+|-- navigation/     # Configuração das rotas e navegação do app
+|-- repositories/   # Camada de abstração de dados (Repository)
+|-- services/       # Camada de comunicação com a API
+|-- viewModels/     # Lógica e estado das telas (ViewModel)
+|-- views/          # Telas e seus estilos (View)
+|-- config.js       # Configurações globais (ex: URL da API)
+
+## ⚙️ Como Executar o Projeto
+
+Markdown
+
+# DietasJá - Aplicativo de Nutrição
+
+![DietasJá Logo](https://i.imgur.com/rG2v0g3.png)
+
+O **DietasJá** é um aplicativo móvel multiplataforma, desenvolvido em React Native, focado em auxiliar usuários no controle de suas dietas e no acompanhamento de sua saúde nutricional. A aplicação permite o monitoramento detalhado do consumo de calorias e macronutrientes, o estabelecimento de metas personalizadas e a visualização do progresso através de um dashboard moderno e interativo.
+
+## ✨ Funcionalidades
+
+* **Autenticação Completa:** Sistema de cadastro e login de usuários.
+* **Perfil de Saúde Detalhado:** O usuário insere dados como peso, altura, idade e gênero, que são usados para cálculos personalizados.
+* **Dashboard Visual:** Uma tela inicial moderna com um gráfico circular de progresso para calorias e barras de progresso para macronutrientes, oferecendo um feedback visual imediato.
+* **Metas Calóricas:** Funcionalidade completa para o usuário cadastrar e editar sua meta de calorias diárias.
+* **Registro de Consumo:** Uma interface intuitiva para pesquisar alimentos, definir a porção consumida e registrar refeições completas com nome personalizado.
+* **Cadastro de Alimentos:** Permite que os usuários adicionem seus próprios alimentos à base de dados, informando seus respectivos macronutrientes.
+* **Histórico Semanal:** Tela com o resumo do consumo dos últimos 7 dias, destacando o cumprimento das metas diárias.
+* **Índices de Saúde:** Cálculo e exibição automática do IMC (Índice de Massa Corporal) e TMB (Taxa de Metabolismo Basal) em cards informativos.
+
+## 🚀 Arquitetura e Padrões de Projeto
+
+O projeto foi arquitetado para ser escalável, testável e de fácil manutenção, utilizando padrões de design modernos que separam as responsabilidades de forma clara:
+
+* **MVVM (Model-View-ViewModel):** A arquitetura principal que separa a interface do usuário (View), a lógica de estado e apresentação (ViewModel) e os dados (Model).
+    * **View:** As telas, localizadas em `src/views/pages`.
+    * **ViewModel:** A lógica e o estado de cada tela, localizados em `src/viewModels`.
+    * **Model:** A camada de dados, abstraída pelos Repositórios.
+* **Repository Pattern:** Cria uma camada de abstração para o acesso a dados. Os ViewModels não interagem diretamente com a API, mas sim com um Repositório, que centraliza a lógica de onde e como buscar as informações. Os repositórios estão em `src/repositories`.
+* **Singleton Pattern:** Cada repositório é implementado como um Singleton, garantindo que exista apenas uma única instância e um ponto de acesso global e consistente aos dados em todo o aplicativo, evitando inconsistências de estado.
+
+## 🛠️ Tecnologias e Bibliotecas
+
+* [**React Native**](https://reactnative.dev/)
+* [**React Navigation**](https://reactnavigation.org/): Gerenciamento de navegação (Stack, Tab e Drawer).
+* [**Axios**](https://axios-http.com/): Cliente HTTP para comunicação com a API.
+* [**React Native Paper**](https://reactnativepaper.com/): Biblioteca de componentes de UI baseada em Material Design.
+* [**React Native Animatable**](https://github.com/oblador/react-native-animatable): Para animações declarativas.
+* [**React Native Progress**](https://github.com/oblador/react-native-progress): Para os componentes visuais de progresso (círculos e barras).
+* [**AsyncStorage**](https://react-native-async-storage.github.io/async-storage/): Para armazenamento local de dados persistentes (ex: token de autenticação).
+
+## 📂 Estrutura de Pastas
+
+src/
+|-- assets/         # Imagens, fontes e outros recursos estáticos
+|-- components/     # Componentes de UI reutilizáveis
+|-- navigation/     # Configuração das rotas e navegação do app
+|-- repositories/   # Camada de abstração de dados (Repository)
+|-- services/       # Camada de comunicação com a API
+|-- viewModels/     # Lógica e estado das telas (ViewModel)
+|-- views/          # Telas e seus estilos (View)
+|-- config.js       # Configurações globais (ex: URL da API)
+
+
+## ⚙️ Como Executar o Projeto
+
+**Pré-requisitos:** Você precisa ter o [Node.js](https://nodejs.org/), [Docker](https://www.docker.com/products/docker-desktop/) e [Python](https://www.python.org/downloads/) instalados na sua máquina.
+
+### 1. Preparação do Ambiente
+
+1. Clone o repositório:**
+```bash
+git clone [https://github.com/seu-usuario/seu-repositorio.git](https://github.com/seu-usuario/seu-repositorio.git)
+cd seu-repositorio
+```
+2.  **Instale as dependências:**
+    # Navegue até a pasta do frontend e instale os pacotes
+    ```
+    cd Base/FrontEnd/FrontEnd
+    npm install
+    ```
+3.  **Configure a API:**
+    * Abra o arquivo `src/config.js`.
+    * Altere a variável `API_BASE_URL` para o endereço da sua API backend.
+
+4.  **Execute o aplicativo:**
+
+    * **Para Android:**
+        ```bash
+        npx react-native run-android
+        ```
+    * **Para iOS:**
+        ```bash
+        npx react-native run-ios
+        ```
+
+## 📸 Screenshots
+
+*(Sugestão: Adicione aqui os screenshots do seu aplicativo para deixar o README mais atrativo!)*
+
+| Tela Inicial (Dashboard) | Visualizar Índices | Histórico Semanal |
+| :---: |:---:|:---:|
+| <img src="URL_DA_SUA_IMAGEM_AQUI" width="250"> | <img src="URL_DA_SUA_IMAGEM_AQUI" width="250"> | <img src="URL_DA_SUA_IMAGEM_AQUI" width="250"> |
+
