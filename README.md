@@ -54,21 +54,21 @@ src/
 ### 1. Preparação do Ambiente
 
 1. Clone o repositório:**
-```bash
-git clone [https://github.com/seu-usuario/seu-repositorio.git](https://github.com/seu-usuario/seu-repositorio.git)
-cd seu-repositorio
-```
-2.  **Instale as dependências:**
+   ```bash
+   git clone [https://github.com/seu-usuario/seu-repositorio.git](https://github.com/seu-usuario/seu-repositorio.git)
+   cd seu-repositorio
+   ```
+2.  Instale as dependências:**
     # Navegue até a pasta do frontend e instale os pacotes
     ```
     cd Base/FrontEnd/FrontEnd
     npm install
     ```
-3.  **Configure a API:**
+3.  Configure a API:**
     * Abra o arquivo `src/config.js`.
     * Altere a variável `API_BASE_URL` para o endereço da sua API backend.
 
-4.  **Execute o aplicativo:**
+4.  Execute o aplicativo:
 
     * **Para Android:**
         ```bash
